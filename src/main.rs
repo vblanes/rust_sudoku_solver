@@ -1,9 +1,35 @@
 // THIS IS A VERY SIMPLE PROGRAMM TO LEARN SOME
 // OF THE RUST LANGUAGE DETAILS
 
-// read the sudoku file
-fn read_initial_position(){
-    println!("TODO");
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+
+fn read_initial_position(filename: &String) -> [[i32;9];9]{
+    // this code assumes correct formating rn
+    let mut board = [[0; 9]; 9];
+
+    let file = File::open(filename).unwrap();
+    let reader = BufReader::new(file);
+
+    let mut i: usize = 0;
+    for line in reader.lines() {
+        let line = line.unwrap(); // Ignore errors
+        let value_iter = line.split(',');
+        let mut j: usize = 0;
+        for elem in value_iter {
+            let elem: i32 = elem.trim().parse().unwrap();
+            board[i][j] = elem;
+            j += 1;
+        }
+        i += 1;
+    }
+    board
+}
+
+fn print_board(board: &[[i32;9];9]) {
+    for i in 0..board.len() {
+        println!("|{:?}|", board[i])
+    }
 }
 
 fn solve(board: &mut [[i32;9];9]) -> bool {
@@ -11,7 +37,7 @@ fn solve(board: &mut [[i32;9];9]) -> bool {
     let (row_free, col_free) = find_empty(board);
     if row_free == -1 {
         println!("We are done!");
-        println!("{:?}", board);
+        print_board(board);
         return true;
     }
     // find option to this free slot
@@ -81,16 +107,9 @@ fn find_empty(board: &mut [[i32;9];9]) -> (isize, isize) {
 
 
 fn main() {
-    let mut board: [[i32; 9];9 ] =
-        [[0, 0, 0, 2, 6, 0, 7, 0, 1],
-        [6, 8, 0, 0, 7, 0, 0, 9, 0],
-        [1, 9, 0, 0, 0, 4, 5, 0, 0],
-        [8, 2, 0, 1, 0, 0, 0, 4, 0],
-        [0, 0, 4, 6, 0, 2, 9, 0, 0],
-        [0, 5, 0, 0, 0, 3, 0, 2, 8],
-        [0, 0, 9, 3, 0, 0, 0, 7, 4],
-        [0, 4, 0, 0, 5, 0, 0, 3, 6],
-        [7, 0, 3, 0, 1, 8, 0, 0, 0],
-    ];
+    let filename = String::from("sudokus/test1.txt");
+    let mut board = read_initial_position(&filename);
+    println!("Initial setup");
+    print_board(&board);
     solve(&mut board);
 }
