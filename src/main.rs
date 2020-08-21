@@ -107,7 +107,7 @@ fn find_empty(board: &mut [[i32;9];9]) -> (isize, isize) {
 
 
 fn main() {
-    let filename = String::from("sudokus/test1.txt");
+    let filename = String::from("sudokus/not_fun.txt");
     let mut board = read_initial_position(&filename);
     println!("Initial setup");
     print_board(&board);
