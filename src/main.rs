@@ -107,9 +107,13 @@ fn find_empty(board: &mut [[i32;9];9]) -> (isize, isize) {
 
 
 fn main() {
-    let filename = String::from("sudokus/not_fun.txt");
+    let filename = String::from("sudokus/imposible.txt");
     let mut board = read_initial_position(&filename);
     println!("Initial setup");
     print_board(&board);
-    solve(&mut board);
+    let is_possible = solve(&mut board);
+    if !is_possible{
+        println!("This sudoku has no solution!!");
+    }
+
 }
